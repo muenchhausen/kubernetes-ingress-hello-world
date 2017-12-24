@@ -1,0 +1,13 @@
+{
+    "name": "ts-hello-service",
+    "version": "1.0.0",
+    "description": "ts-hello-service",
+    "author": "Derk Muenchhausen <derk@muenchhausen.de>",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.16.1"
+    }
+  }
