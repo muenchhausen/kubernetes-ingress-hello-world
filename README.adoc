@@ -1,3 +1,7 @@
+= Kubernetes Ingress Hello-World sample
+
+[source,bash]
+----
 sudo minikube start
 
 minikube addons enable ingress
@@ -25,11 +29,12 @@ kubectl create -f kubernetes-ingress-hello-world.yaml
 kubectl describe ing kubernetes-ingress-hello-world
 
 echo "$(sudo minikube ip) echo.toall greetings.toall" | sudo tee -a /etc/hosts
+----
 
 # recommended readings:
-https://medium.com/@Oskarr3/setting-up-ingress-on-minikube-6ae825e98f82
-https://github.com/kubernetes/ingress-nginx/tree/master/deploy#minikube
-https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md
-https://medium.com/@gokulc/setting-up-nginx-ingress-on-kubernetes-2b733d8d2f45
+https://github.com/kubernetes/ingress-nginx/tree/master/deploy#minikube[kubernetes howto: nginx ingress]
+https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md[nginx howto: own ingress controller]
+https://medium.com/@Oskarr3/setting-up-ingress-on-minikube-6ae825e98f82[howto: setting up ingress on minikube]
+https://medium.com/@gokulc/setting-up-nginx-ingress-on-kubernetes-2b733d8d2f45[howto: nginx ingress with ssl]
 
 
