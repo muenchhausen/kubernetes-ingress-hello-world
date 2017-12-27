@@ -8,7 +8,6 @@ minikube addons enable ingress
 kubectl delete deployment,service echoserver
 kubectl delete ingress kubernetes-ingress-hello-world
 kubectl delete secret tls-certificate
-kubectl delete secret tls-dhparam
 
 eval $(sudo minikube docker-env)
 docker build -t hello-service hello-service/ 
@@ -29,12 +28,7 @@ sudo minikube service paris
 
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -subj "/CN=greetings.toall"
-# generate a key used to get "Perfect Forward Secrecy" in nginx:
-# openssl dhparam -out /tmp/dhparam.pem 4096
-# ..or do the fast way for testing:
-openssl dhparam -out /tmp/dhparam.pem 512
 kubectl create secret tls tls-certificate --key /tmp/tls.key --cert /tmp/tls.crt
-kubectl create secret generic tls-dhparam --from-file=/tmp/dhparam.pem
 
 minikube addons enable ingress
 kubectl create --validate=false -f kubernetes-ingress-hello-world.yaml
