@@ -4,8 +4,10 @@
 ----
 sudo minikube start
 
-minikube addons enable ingress
+sudo minikube addons disable ingress
 kubectl delete deployment,service echoserver
+kubectl delete deployment,service munich
+kubectl delete deployment,service paris
 kubectl delete ingress kubernetes-ingress-hello-world
 kubectl delete secret tls-certificate
 
@@ -15,28 +17,61 @@ docker run -ti hello-service
 
 kubectl run echoserver --image=gcr.io/google_containers/echoserver:1.4 --port=8080
 kubectl expose deployment echoserver --type=NodePort
-sudo minikube service echoserver
+# sudo minikube service echoserver
 
 kubectl run munich --image=hello-service:latest --image-pull-policy=Never --env="GREETINGS=grias-eich" --port=80
 kubectl expose deployment munich --type=NodePort
-sudo minikube service munich
+# sudo minikube service munich
 
 kubectl run paris --image=hello-service:latest --image-pull-policy=Never --env="GREETINGS=bonjour" --port=80
 kubectl expose deployment paris --type=NodePort
-sudo minikube service paris
+# sudo minikube service paris
 
 
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -subj "/CN=greetings.toall"
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -subj "/CN=munich.greetings.toall/DNS.1=greetings.toall/DNS.2=paris.greetings.toall"
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -config <(
+cat <<-EOF
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+x509_extensions = req_ext
+
+[ dn ]
+CN = greetings.toall
+C = DE
+ST = BY
+L = Munich
+O = Muenchhausen
+OU = Muenchhausen
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = greetings.toall
+DNS.2 = munich.greetings.toall
+DNS.3 = paris.greetings.toall
+EOF
+)
+
+
 kubectl create secret tls tls-certificate --key /tmp/tls.key --cert /tmp/tls.crt
 
-minikube addons enable ingress
+
+
+sudo minikube addons enable ingress
 kubectl create --validate=false -f kubernetes-ingress-hello-world.yaml
-kubectl describe ing kubernetes-ingress-hello-world
+# kubectl describe ing kubernetes-ingress-hello-world
 
-echo "$(sudo minikube ip) echo.toall greetings.toall" | sudo tee -a /etc/hosts
+# echo "$(sudo minikube ip) echo.toall greetings.toall paris.greetings.toall munich.greetings.toall" | sudo tee -a /etc/hosts
 
-kubectl get pods --all-namespaces --watch
+# kubectl get pods --all-namespaces --watch
+# kubectl scale deployment munich --replicas=3
 
 ----
 
@@ -47,3 +82,4 @@ kubectl get pods --all-namespaces --watch
 * https://medium.com/@Oskarr3/setting-up-ingress-on-minikube-6ae825e98f82[howto: setting up ingress on minikube]
 * https://github.com/kubernetes/contrib/tree/master/ingress/controllers/nginx/examples/tls[howto: nginx ingress ssl termination]
 * https://github.com/kubernetes/ingress-nginx/issues/1374[issue: nginx ingress certificate]
+* https://daemonza.github.io/2017/02/13/kubernetes-nginx-ingress-controller/[howto: Kubernetes nginx-ingress-controller]

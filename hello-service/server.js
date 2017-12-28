@@ -18,7 +18,7 @@ function getAppDetails() {
 
 const app = express();
 app.get('/', (request, result) => {
-  result.send(`Hello world! Best regards, ${process.env.GREETINGS}.\n${getAppDetails()}`);
+  result.send(`${process.env.GREETINGS}!<br>\nYour hello-service.<br>\n${getAppDetails()}`);
 });
 
 app.listen(PORT, HOST);

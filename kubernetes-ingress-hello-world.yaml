@@ -7,22 +7,16 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
     enable-vts-status: "true"
 spec:
-  # SSLDHParam
   tls:
   - secretName: tls-certificate
     hosts:
     - greetings.toall
+    - munich.greetings.toall
+    - paris.greetings.toall
   backend:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: echo.toall
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: echoserver
-          servicePort: 8080
   - host: greetings.toall
     http:
       paths:
@@ -31,6 +25,24 @@ spec:
           serviceName: munich
           servicePort: 80
       - path: /paris
+        backend:
+          serviceName: paris
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: echoserver
+          servicePort: 8080
+  - host: munich.greetings.toall
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: munich
+          servicePort: 80
+  - host: paris.greetings.toall
+    http:
+      paths:
+      - path: /
         backend:
           serviceName: paris
           servicePort: 80
