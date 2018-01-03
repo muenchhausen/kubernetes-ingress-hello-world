@@ -1,5 +1,55 @@
-= Kubernetes Ingress Hello-World sample
+= Kubernetes Ingress 
+Hello-World sample
 
+== kubernetes concepts
+
+=== pod
+* atomic building block
+* one or more container
+* colocated, shared ports, shared volumes
+* mortal: they are born and they die
+
+=== node
+* pods run on nodes
+* worker machine
+
+=== service
+* cluster internal abstraction to access set of pods
+* name, label selector
+* virtual ip, port
+* routing by iptables, kube-proxy
+
+=== ingress
+* manages external access to the services in a cluster
+* mostly http based
+* ssl termination
+* load balancing
+* name based virtual hosting
+
+=== other controllers
+* ReplicationController / Replica Sets
+* IngressController
+* Deployment controller
+
+=== config maps
+* inject containers with configuration data
+ * by command line
+ * environment variables
+ * volume
+* name/value pairs or entire config files
+
+=== secrets
+
+bub
+
+== live demo
+
+* minikube is a docker environment
+* secrets
+* ingress
+
+=== minikube startup
+:source-highlighter: highlightjs
 [source,bash]
 ----
 sudo minikube start
@@ -10,11 +60,21 @@ kubectl delete deployment,service munich
 kubectl delete deployment,service paris
 kubectl delete ingress kubernetes-ingress-hello-world
 kubectl delete secret tls-certificate
+----
 
+=== minikube docker enironment
+:source-highlighter: highlightjs
+[source,bash]
+----
 eval $(sudo minikube docker-env)
 docker build -t hello-service hello-service/ 
 docker run -ti hello-service
+----
 
+=== create pods & services
+:source-highlighter: highlightjs
+[source,bash]
+----
 kubectl run echoserver --image=gcr.io/google_containers/echoserver:1.4 --port=8080
 kubectl expose deployment echoserver --type=NodePort
 # sudo minikube service echoserver
@@ -26,11 +86,12 @@ kubectl expose deployment munich --type=NodePort
 kubectl run paris --image=hello-service:latest --image-pull-policy=Never --env="GREETINGS=bonjour" --port=80
 kubectl expose deployment paris --type=NodePort
 # sudo minikube service paris
+----
 
-
-
-# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -subj "/CN=munich.greetings.toall/DNS.1=greetings.toall/DNS.2=paris.greetings.toall"
-
+=== create secrets
+:source-highlighter: highlightjs
+[source,bash]
+----
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/tls.key -out /tmp/tls.crt -config <(
 cat <<-EOF
 [req]
@@ -59,11 +120,14 @@ DNS.3 = paris.greetings.toall
 EOF
 )
 
-
 kubectl create secret tls tls-certificate --key /tmp/tls.key --cert /tmp/tls.crt
+----
 
 
-
+=== create ingress
+:source-highlighter: highlightjs
+[source,bash]
+----
 sudo minikube addons enable ingress
 kubectl create --validate=false -f kubernetes-ingress-hello-world.yaml
 # kubectl describe ing kubernetes-ingress-hello-world
@@ -75,8 +139,17 @@ kubectl create --validate=false -f kubernetes-ingress-hello-world.yaml
 
 ----
 
+== alternatives
+other ingress controllers
 
-# recommended readings:
+* kubernetes/ingress-nginx 	
+* nginxinc/kubernetes-ingress with NGINX 	
+* nginxinc/kubernetes-ingress with NGINX Plus 	
+* haproxy based (upcomming)		
+
+https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md[source]
+
+== recommended readings
 * https://github.com/kubernetes/ingress-nginx/tree/master/deploy#minikube[kubernetes howto: nginx ingress]
 * https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md[nginx howto: own ingress controller]
 * https://medium.com/@Oskarr3/setting-up-ingress-on-minikube-6ae825e98f82[howto: setting up ingress on minikube]
