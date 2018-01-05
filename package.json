@@ -1,0 +1,22 @@
+{
+  "name": "kubernetes-ingress-hello-world",
+  "version": "1.0.0",
+  "description": "= Kubernetes Ingress Hello-World sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muenchhausen/kubernetes-ingress-hello-world.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muenchhausen/kubernetes-ingress-hello-world/issues"
+  },
+  "homepage": "https://github.com/muenchhausen/kubernetes-ingress-hello-world#readme",
+  "dependencies": {
+    "asciidoctor-reveal.js": "^1.1.0"
+  }
+}
