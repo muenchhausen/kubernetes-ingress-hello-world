@@ -1,24 +1,38 @@
+[background-color="#303030"]
 = Kubernetes Ingress 
 Hello-World sample
 
+[background-color="#326de6"]
 == kubernetes concepts
 
+[background-color="#326de6"]
 === pod
 * atomic building block
 * one or more container
 * colocated, shared ports, shared volumes
 * mortal: they are born and they die
 
+[background-color="#326de6"]
 === node
 * pods run on nodes
 * worker machine
 
+[background-color="#326de6"]
 === service
 * cluster internal abstraction to access set of pods
-* name, label selector
+* unique name 
+* labels & selectors: e.g. "release" : "stable", "environment" : "dev"
 * virtual ip, port
 * routing by iptables, kube-proxy
 
+[background-color="#326de6"]
+=== deployment
+* describe how pods should run
+* desired count of replicas
+* labels & selectors
+* update strategy
+
+[background-color="#326de6"]
 === ingress
 * manages external access to the services in a cluster
 * mostly http based
@@ -26,22 +40,31 @@ Hello-World sample
 * load balancing
 * name based virtual hosting
 
+[background-color="#326de6"]
 === other controllers
 * ReplicationController / Replica Sets
 * IngressController
 * Deployment controller
 
-=== config maps
+[background-color="#326de6"]
+=== ConfigMaps
 * inject containers with configuration data
  * by command line
  * environment variables
  * volume
 * name/value pairs or entire config files
 
+[background-color="#326de6"]
 === secrets
+* similar to ConfigMaps, more restricted
+* name/value pairs, no entire config file
 
-bub
+[background-color="#326de6"]
+=== other concepts
+* annotations: like labels, but "non-identifying metadata"
+* namespaces: allows multiple virtual clusters in the same physical cluster
 
+[background-color="#09c1d1"]
 == live demo
 
 * minikube is a docker environment
@@ -54,6 +77,7 @@ bub
 ----
 sudo minikube start
 
+# optional: cleanup of previous try:
 sudo minikube addons disable ingress
 kubectl delete deployment,service echoserver
 kubectl delete deployment,service munich
@@ -139,6 +163,7 @@ kubectl create --validate=false -f kubernetes-ingress-hello-world.yaml
 
 ----
 
+[background-color="#09c1d1"]
 == alternatives
 other ingress controllers
 
@@ -149,7 +174,9 @@ other ingress controllers
 
 https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md[source]
 
+[background-color="#c9e9ec"]
 == recommended readings
+* https://kubernetes.io/docs/reference/kubectl/docker-cli-to-kubectl/[kubectl for docker users]
 * https://github.com/kubernetes/ingress-nginx/tree/master/deploy#minikube[kubernetes howto: nginx ingress]
 * https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-controllers.md[nginx howto: own ingress controller]
 * https://medium.com/@Oskarr3/setting-up-ingress-on-minikube-6ae825e98f82[howto: setting up ingress on minikube]
