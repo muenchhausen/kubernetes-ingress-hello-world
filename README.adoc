@@ -1,6 +1,6 @@
 [background-color="#303030"]
 = Kubernetes Ingress 
-Hello-World sample
+Hello-World sample for deploying on premises
 
 [background-color="#326de6"]
 == kubernetes concepts
@@ -39,6 +39,27 @@ Hello-World sample
 * ssl termination
 * load balancing
 * name based virtual hosting
+
+=== node failover
+* DNS based 
+* external load balancers
+* VIP based - e.g. keepalived-vip:
+----
+                                                  ___________________
+                                                 |                   |
+                                           |-----| Host IP: 10.4.0.3 |
+                                           |     |___________________|
+                                           |
+                                           |      ___________________
+                                           |     |                   |
+Public ----(example.com = 10.4.0.3/4/5)----|-----| Host IP: 10.4.0.4 |
+                                           |     |___________________|
+                                           |
+                                           |      ___________________
+                                           |     |                   |
+                                           |-----| Host IP: 10.4.0.5 |
+                                                 |___________________|
+----
 
 [background-color="#326de6"]
 === other controllers
@@ -183,3 +204,4 @@ https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/nginx-ingress-co
 * https://github.com/kubernetes/contrib/tree/master/ingress/controllers/nginx/examples/tls[howto: nginx ingress ssl termination]
 * https://github.com/kubernetes/ingress-nginx/issues/1374[issue: nginx ingress certificate]
 * https://daemonza.github.io/2017/02/13/kubernetes-nginx-ingress-controller/[howto: Kubernetes nginx-ingress-controller]
+* https://github.com/kubernetes/contrib/tree/master/keepalived-vip[keepalived-vip]
